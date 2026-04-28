@@ -34,6 +34,9 @@
   --shadow-md:    0 4px 20px rgba(0,0,0,.45);
   --sidebar-w:    300px;
   --font:         'Inter', system-ui, sans-serif;
+
+  /* Content width (main editor) */
+  --content-max:  980px;
 }
 
 /* ============================================================
@@ -48,6 +51,7 @@ body {
   font-size: 14px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow: hidden;
 }
 button { font-family: inherit; cursor: pointer; border: none; background: none; }
 input, textarea { font-family: inherit; }
@@ -59,6 +63,7 @@ textarea { resize: none; }
 .app-shell {
   display: flex;
   height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
 }
 
@@ -425,6 +430,12 @@ textarea { resize: none; }
   min-height: 32px;
 }
 
+.tag-input__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 .tag-input__field {
   background: transparent;
   border: none;
@@ -508,6 +519,91 @@ textarea { resize: none; }
   box-shadow: var(--shadow-md);
   text-align: center;
   animation: dialogIn .2s ease;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+/* Touch devices: make destructive actions discoverable */
+@media (hover: none) {
+  .note-card__delete { opacity: 1; }
+}
+
+/* Slightly tighter tablet spacing */
+@media (max-width: 960px) {
+  :root { --sidebar-w: 280px; }
+
+  .note-editor__toolbar { padding: 12px 16px; }
+  .note-editor__title { font-size: 22px; padding: 18px 18px 10px; }
+  .note-editor__tags { padding: 0 18px 10px; }
+  .note-editor__body { padding: 10px 18px 18px; }
+}
+
+/* Phone: stack sidebar above editor */
+@media (max-width: 720px) {
+  body { overflow: hidden; }
+
+  .app-shell { flex-direction: column; }
+
+  .sidebar {
+    width: 100%;
+    min-width: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar__header { padding: 14px 14px 12px; }
+  .sidebar__search { padding: 10px 12px 8px; }
+  .sidebar__section-label { padding-left: 14px; padding-right: 14px; }
+
+  /* Keep the note list usable without swallowing the whole viewport */
+  .sidebar__list { max-height: 34vh; }
+
+  /* Let the editor take the rest of the viewport */
+  .app-main { flex: 1; min-height: 0; }
+
+  .note-editor__toolbar {
+    padding: 10px 12px;
+    justify-content: space-between;
+  }
+  .note-editor__meta { flex-wrap: wrap; gap: 6px; }
+
+  .note-editor__title {
+    display: block;
+    font-size: clamp(18px, 5.4vw, 22px);
+    padding: 14px 14px 8px;
+  }
+  .note-editor__tags { padding: 0 14px 8px; }
+  .note-editor__body {
+    padding: 8px 14px 14px;
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  /* Sidebar button: icon always, label optional */
+  #new-note-btn { padding: 7px 10px; }
+  .btn__label { display: none; }
+
+  .dialog { padding: 22px 18px; }
+  .dialog__actions { flex-direction: column; }
+}
+
+/* Wide screens: keep editor content readable */
+@media (min-width: 1024px) {
+  .note-editor__title,
+  .note-editor__tags,
+  .note-editor__body {
+    max-width: var(--content-max);
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .note-editor__toolbar {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
 }
 
 .dialog__icon {
